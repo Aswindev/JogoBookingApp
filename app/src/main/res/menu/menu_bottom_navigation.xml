@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_booking"
+        android:enabled="true"
+        android:icon="@drawable/ic_event_available_black_24dp"
+        android:title="@string/book_a_slot"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_venues"
+        android:enabled="true"
+        android:icon="@drawable/ic_place_black_24dp"
+        android:title="@string/venues"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title="@string/profile"
+        app:showAsAction="ifRoom" />
+</menu>

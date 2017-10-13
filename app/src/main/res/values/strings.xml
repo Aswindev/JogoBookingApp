@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">JogoBookingApp</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="venues"></string>
+    <string name="profile"></string>
+    <string name="book_a_slot"></string>
+
+    <string name="hello_venue_fragment">Hello, venue fragment</string>
+    <string name="hello_profile_fragment">hello, Profile fragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
