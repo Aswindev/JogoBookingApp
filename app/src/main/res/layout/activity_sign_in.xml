@@ -53,6 +53,7 @@
             android:background="@color/colorAccent"/>
 
         <TextView
+            android:id="@+id/activity_sign_in_button_textview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="SIGN IN"

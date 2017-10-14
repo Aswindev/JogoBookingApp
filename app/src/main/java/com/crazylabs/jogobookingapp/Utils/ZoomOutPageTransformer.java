@@ -22,7 +22,7 @@ public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
 
 
     public void transformPage(View page, float position) {
-        Log.d("zoomoutpagetransformer", "position: "+position);
+//        Log.d("zoomoutpagetransformer", "position: "+position);
         if (offset == -1) {
             offset = paddingLeft / page.getMeasuredWidth();
         }

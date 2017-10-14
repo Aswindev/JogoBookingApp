@@ -51,7 +51,9 @@ public class BookingFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_booking, container, false);
 
+
         InitViews(view);
+        new FadeOutAndHideImage(logoImage, 50);
 
         OptimizeCardPadding();
         ToolbarStateCheck();
@@ -68,7 +70,9 @@ public class BookingFragment extends Fragment {
                 }else if (verticalOffset < 20){
                         logoVisibility=false;
                 }
+//                Log.d("Toolbarstatecheck", "fadeOut: "+toolbar.getAlpha());
                 ModifyLogoState();
+
             }
         });
     }
@@ -77,14 +81,15 @@ public class BookingFragment extends Fragment {
 //        Log.d("Toolbarstatecheck", "Outside: "+alreadyVisible+logoVisibility);
         if (logoVisibility && !alreadyVisible) {
             new FadeInAndShowImage(logoImage);
-            Log.d("Toolbarstatecheck", "fadeIn: "+alreadyVisible+logoVisibility);
+//            Log.d("Toolbarstatecheck", "fadeIn: "+alreadyVisible+logoVisibility);
             alreadyVisible=true;
-            Log.d("Toolbarstatecheck", "fadeIn: "+logoImage.getVisibility());
+//            Log.d("Toolbarstatecheck", "fadeIn: "+logoImage.getVisibility());
          }
         if (!logoVisibility && alreadyVisible) {
-            new FadeOutAndHideImage(logoImage);
-            Log.d("Toolbarstatecheck", "fadeOut: "+alreadyVisible+logoVisibility);
+            new FadeOutAndHideImage(logoImage, 500);
+//            Log.d("Toolbarstatecheck", "fadeOut: "+alreadyVisible+logoVisibility);
             alreadyVisible=false;
+//            Log.d("Toolbarstatecheck", "fadeOut: "+logoImage.getVisibility());
         }
     }
 
@@ -121,8 +126,8 @@ public class BookingFragment extends Fragment {
 
     private class CarouselAdapter extends FragmentStatePagerAdapter {
 
-        private final int IMAGE_IDS[] = {R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round};
-        private final String IMAGE_SUBTEXTS[] = {"1","2","3","4","5"};
+        private final int IMAGE_IDS[] = {R.drawable.panampilly, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round};
+        private final String IMAGE_SUBTEXTS[] = {"kadavanthra","2","3","4","5"};
 
 
         public CarouselAdapter(FragmentManager fm) {

@@ -13,10 +13,10 @@ import android.widget.ImageView;
 
 public class FadeOutAndHideImage {
 
-    public FadeOutAndHideImage(final ImageView img) {
+    public FadeOutAndHideImage(final ImageView img, int n) {
         Animation fadeOut = new AlphaAnimation(1, 0);
         fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
-        fadeOut.setDuration(500);
+        fadeOut.setDuration(n);
 
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             public void onAnimationEnd(Animation animation) {
