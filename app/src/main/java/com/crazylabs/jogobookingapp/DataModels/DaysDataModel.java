@@ -1,21 +1,25 @@
 package com.crazylabs.jogobookingapp.DataModels;
 
+import android.util.Log;
+
 /**
  * Created by aswin on 14/10/2017.
  */
 
 public class DaysDataModel {
-    private int year, month, date, time;
-    private String day;
+    public int year, date;
+    public String day, month, time;
 
-    public DaysDataModel(){
-
-    }
-
-    public DaysDataModel(int year,int month,int date, int time){
+    public DaysDataModel(int year,String month,int date, String day){
         this.year=year;
         this.month=month;
         this.date=date;
-        this.time=time;
+        this.day=day;
+        Log.d("DatesS", "DaysDataModel: "+year+" "+month+" "+date+" "+time+" "+day);
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+        Log.d("DatesS", "DaysDataModel: "+time);
     }
 }

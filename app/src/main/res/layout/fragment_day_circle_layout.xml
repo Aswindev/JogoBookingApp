@@ -1,29 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:orientation="vertical" android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:padding="3dp"
     android:gravity="center">
 
-    <LinearLayout
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:orientation="vertical"
-        android:padding="5dp"
+
+    <RelativeLayout
+        android:id="@+id/fragment_day_circle_container_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@drawable/circle">
         <TextView
             android:id="@+id/fragment_day_circle_date_textview"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Notification"
+            android:textSize="24sp"
             android:text="01"
+            android:layout_centerInParent="true"
+            android:textAlignment="center"/>
+        <TextView
+            android:id="@+id/fragment_day_circle_month_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="JAN"
+            android:textStyle="bold"
+            android:textSize="9sp"
+            android:alpha="0.7"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:textAllCaps="true"
+            android:layout_alignParentTop="true"
             android:textAlignment="center"/>
         <TextView
             android:id="@+id/fragment_day_circle_day_textview"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_marginBottom="2dp"
             android:text="MON"
+            android:textStyle="bold"
+            android:textSize="9sp"
+            android:alpha="0.7"
             android:textAllCaps="true"
+            android:layout_alignParentBottom="true"
             android:textAlignment="center"/>
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

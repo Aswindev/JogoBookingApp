@@ -46,20 +46,20 @@
         android:layout_marginTop="5dp"
         android:cropToPadding="true"
         android:clipToPadding="true"
-        android:elevation="2dp"
-        android:background="@color/colorWhite">
+        android:elevation="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/colorBlack">
 
             <ImageView
                 android:id="@+id/fragment_arena_card_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:layout_centerHorizontal="true"
-                android:src="@mipmap/ic_launcher_round"/>
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:layout_centerHorizontal="true"/>
 
         </RelativeLayout>
 

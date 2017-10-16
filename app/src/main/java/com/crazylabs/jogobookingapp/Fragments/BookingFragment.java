@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -19,10 +21,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.crazylabs.jogobookingapp.Adapters.DaysRecyclerViewAdapter;
 import com.crazylabs.jogobookingapp.Animations.FadeInAndShowImage;
 import com.crazylabs.jogobookingapp.Animations.FadeOutAndHideImage;
+import com.crazylabs.jogobookingapp.DataModels.DaysDataModel;
 import com.crazylabs.jogobookingapp.R;
 import com.crazylabs.jogobookingapp.Utils.ZoomOutPageTransformer;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -40,6 +50,11 @@ public class BookingFragment extends Fragment {
     private static Boolean logoVisibility=false;
     private static Boolean alreadyVisible=false;
 
+    private DaysDataModel daysDataModel;
+    final List<DaysDataModel> result = new ArrayList<DaysDataModel>();
+    private RecyclerView daysRecList;
+    private DaysRecyclerViewAdapter ca;
+
     public BookingFragment() {
         // Required empty public constructor
     }
@@ -53,11 +68,52 @@ public class BookingFragment extends Fragment {
 
 
         InitViews(view);
+//        Hide JOGO logo initially
         new FadeOutAndHideImage(logoImage, 50);
-
+//        Set negative margin for the arena cards to make multiple cards visible simultaneously
         OptimizeCardPadding();
+//        Decide when to show JOGO logo
         ToolbarStateCheck();
+        InitHorizontalDateSelectorList(view);
         return view;
+    }
+
+    private void InitHorizontalDateSelectorList(View view) {
+        daysRecList = (RecyclerView) view.findViewById(R.id.fragment_booking_days_recyclerview);
+        daysRecList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+        daysRecList.setLayoutManager(llm);
+        ca = new DaysRecyclerViewAdapter(createListDays(100),getContext());
+        daysRecList.setAdapter(ca);
+    }
+
+    private List<DaysDataModel> createListDays(final int size) {
+        Calendar cal = Calendar.getInstance(); //Get the Calendar instance
+        Date fromDate = cal.getTime();// Get the Date object
+
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEE");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
+        cal.add(Calendar.MONTH,3);//Three months from now
+        Date toDate = cal.getTime();// Get the Date object
+
+        int tempYear, tempMonth, tempTime;
+
+        Log.d("Dates", "createListDays-> From: "+fromDate);
+        Log.d("Dates", "createListDays-> To: "+toDate);
+
+        cal.setTime(fromDate);
+        while (cal.getTime().before(toDate)) {
+            daysDataModel=new DaysDataModel(cal.get(Calendar.YEAR),monthFormat.format(cal.getTime()),cal.get(Calendar.DATE),dayFormat.format(cal.getTime()));
+            result.add(daysDataModel);
+            cal.add(Calendar.DATE, 1);
+        }
+
+//        daysDataModel.setTime(timeFormat.format(cal.getTime()));
+
+        return result;
     }
 
     private void ToolbarStateCheck() {
