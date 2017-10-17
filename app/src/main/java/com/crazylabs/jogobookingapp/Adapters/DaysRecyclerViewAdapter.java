@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crazylabs.jogobookingapp.DataModels.DaysDataModel;
 import com.crazylabs.jogobookingapp.R;
 
 import java.util.List;
+
+import static com.crazylabs.jogobookingapp.Fragments.BookingFragment.selectedPosition;
 
 /**
  * Created by aswin on 14/10/2017.
@@ -39,6 +42,18 @@ public class DaysRecyclerViewAdapter extends RecyclerView.Adapter<DaysRecyclerVi
         daysViewHolder.vDay.setText(ci.day);
         daysViewHolder.vDate.setText(String.valueOf(ci.date));
         daysViewHolder.vMonth.setText(String.valueOf(ci.month));
+
+        if (selectedPosition==i) {
+            daysViewHolder.vRelativeLayout.setBackgroundResource(R.drawable.circle_black);
+            daysViewHolder.vDate.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+            daysViewHolder.vDay.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+            daysViewHolder.vMonth.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+        } else {
+            daysViewHolder.vRelativeLayout.setBackgroundResource(R.drawable.circle);
+            daysViewHolder.vDate.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+            daysViewHolder.vDay.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+            daysViewHolder.vMonth.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+        }
     }
 
 
@@ -53,12 +68,14 @@ public class DaysRecyclerViewAdapter extends RecyclerView.Adapter<DaysRecyclerVi
         protected TextView vDate;
         protected TextView vDay;
         protected TextView vMonth;
+        protected RelativeLayout vRelativeLayout;
 
         public DaysViewHolder(View v) {
             super(v);
             vDate = (TextView) v.findViewById(R.id.fragment_day_circle_date_textview);
             vDay = (TextView) v.findViewById(R.id.fragment_day_circle_day_textview);
             vMonth = (TextView) v.findViewById(R.id.fragment_day_circle_month_textview);
+            vRelativeLayout= (RelativeLayout) v.findViewById(R.id.fragment_day_circle_container_relative_layout);
         }
     }
 }

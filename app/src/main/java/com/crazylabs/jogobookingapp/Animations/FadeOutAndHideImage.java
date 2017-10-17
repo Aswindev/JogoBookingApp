@@ -27,6 +27,8 @@ public class FadeOutAndHideImage {
             }
 
             public void onAnimationStart(Animation animation) {
+
+                img.animate().scaleX(0.1f).scaleY(0.1f).setDuration(300).start();
             }
         });
 

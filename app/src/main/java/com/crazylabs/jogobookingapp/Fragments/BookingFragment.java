@@ -19,13 +19,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crazylabs.jogobookingapp.Adapters.DaysRecyclerViewAdapter;
 import com.crazylabs.jogobookingapp.Animations.FadeInAndShowImage;
 import com.crazylabs.jogobookingapp.Animations.FadeOutAndHideImage;
 import com.crazylabs.jogobookingapp.DataModels.DaysDataModel;
 import com.crazylabs.jogobookingapp.R;
+import com.crazylabs.jogobookingapp.Utils.ArenaLocationClass;
+import com.crazylabs.jogobookingapp.Utils.ItemClickSupport;
 import com.crazylabs.jogobookingapp.Utils.ZoomOutPageTransformer;
 
 import java.text.SimpleDateFormat;
@@ -55,6 +59,13 @@ public class BookingFragment extends Fragment {
     private RecyclerView daysRecList;
     private DaysRecyclerViewAdapter ca;
 
+    private TextView locationNameTextView;
+
+    private DaysDataModel selectedDay;
+    public static int selectedPosition;
+
+    private LinearLayout[] timeSlotLinearLayout=new LinearLayout[20];
+
     public BookingFragment() {
         // Required empty public constructor
     }
@@ -75,7 +86,22 @@ public class BookingFragment extends Fragment {
 //        Decide when to show JOGO logo
         ToolbarStateCheck();
         InitHorizontalDateSelectorList(view);
+
+        SetListenersForTimeSlots();
         return view;
+    }
+
+    private void SetListenersForTimeSlots() {
+        for (int i = 0; i < 20; i++) {
+            final int finalI = i;
+            timeSlotLinearLayout[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("TimeslotlistenersLL", "onClick: "+ finalI);
+                    timeSlotLinearLayout[finalI].setBackgroundResource(R.drawable.hollow_rectangle);
+                }
+            });
+        }
     }
 
     private void InitHorizontalDateSelectorList(View view) {
@@ -86,6 +112,16 @@ public class BookingFragment extends Fragment {
         daysRecList.setLayoutManager(llm);
         ca = new DaysRecyclerViewAdapter(createListDays(100),getContext());
         daysRecList.setAdapter(ca);
+
+//        Listener for date selection recyclerview
+        ItemClickSupport.addTo(daysRecList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                selectedDay=result.get(position);
+                selectedPosition=position;
+                ca.notifyDataSetChanged();
+            }
+        });
     }
 
     private List<DaysDataModel> createListDays(final int size) {
@@ -142,7 +178,7 @@ public class BookingFragment extends Fragment {
 //            Log.d("Toolbarstatecheck", "fadeIn: "+logoImage.getVisibility());
          }
         if (!logoVisibility && alreadyVisible) {
-            new FadeOutAndHideImage(logoImage, 500);
+            new FadeOutAndHideImage(logoImage, 300);
 //            Log.d("Toolbarstatecheck", "fadeOut: "+alreadyVisible+logoVisibility);
             alreadyVisible=false;
 //            Log.d("Toolbarstatecheck", "fadeOut: "+logoImage.getVisibility());
@@ -162,6 +198,29 @@ public class BookingFragment extends Fragment {
         collapsingToolbarLayout= (CollapsingToolbarLayout) view.findViewById(R.id.booking_fragment_collapsing_toolbar_layout);
         toolbar= (Toolbar) view.findViewById(R.id.booking_fragment_toolbar);
         logoImage= (ImageView) view.findViewById(R.id.booking_fragment_logo_image);
+        locationNameTextView= (TextView) view.findViewById(R.id.fragment_booking_location_textview);
+
+        timeSlotLinearLayout[0]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_1);
+        timeSlotLinearLayout[1]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_2);
+        timeSlotLinearLayout[2]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_3);
+        timeSlotLinearLayout[3]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_4);
+        timeSlotLinearLayout[4]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_5);
+        timeSlotLinearLayout[5]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_6);
+        timeSlotLinearLayout[6]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_7);
+        timeSlotLinearLayout[7]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_8);
+        timeSlotLinearLayout[8]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_9);
+        timeSlotLinearLayout[9]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_10);
+        timeSlotLinearLayout[10]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_11);
+        timeSlotLinearLayout[11]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_12);
+        timeSlotLinearLayout[12]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_13);
+        timeSlotLinearLayout[13]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_14);
+        timeSlotLinearLayout[14]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_15);
+        timeSlotLinearLayout[15]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_16);
+        timeSlotLinearLayout[16]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_17);
+        timeSlotLinearLayout[17]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_18);
+        timeSlotLinearLayout[18]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_19);
+        timeSlotLinearLayout[19]= (LinearLayout) view.findViewById(R.id.fragment_booking_linear_layout_20);
+
     }
 
     @Override
@@ -176,14 +235,33 @@ public class BookingFragment extends Fragment {
         viewPager.setClipToPadding(false);
         carouselAdapter.notifyDataSetChanged();
         viewPager.setPadding(0, 0, 0, 0);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            int temp=-1;
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                Log.d("viewpagercurrentpage", "onPageScrolled: "+ArenaLocationClass.IMAGE_SUBTEXTS[position]);
+                if (position!=temp) {
+                    temp=position;
+                    locationNameTextView.setText(ArenaLocationClass.IMAGE_SUBTEXTS[position]);
+                }
+            }
 
+            @Override
+            public void onPageSelected(int position) {
+//                Log.d("viewpagercurrentpage", "onPageSelected: "+ArenaLocationClass.IMAGE_SUBTEXTS[position]);
+            }
 
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private class CarouselAdapter extends FragmentStatePagerAdapter {
 
-        private final int IMAGE_IDS[] = {R.drawable.panampilly, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round};
-        private final String IMAGE_SUBTEXTS[] = {"kadavanthra","2","3","4","5"};
+        private final int IMAGE_IDS[] = ArenaLocationClass.IMAGE_IDS;
+        private final String IMAGE_SUBTEXTS[] = ArenaLocationClass.IMAGE_SUBTEXTS;
 
 
         public CarouselAdapter(FragmentManager fm) {

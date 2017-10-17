@@ -57,11 +57,9 @@ public class ArenaCardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_arena_card, container, false);
 
         ImageView imageView = (ImageView) view.findViewById(R.id.fragment_arena_card_image);
-        TextView textView = (TextView) view.findViewById(R.id.fragment_arena_card_text);
 
         if((imageId != 0) && (text != null)){
             imageView.setImageResource(imageId);
-            textView.setText(text);
         }
 
         return view;

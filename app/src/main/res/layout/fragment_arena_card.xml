@@ -5,44 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.crazylabs.jogobookingapp.Fragments.ArenaCardFragment">
 
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        app:cardCornerRadius="10dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginTop="5dp"
-        android:cropToPadding="true"
-        android:clipToPadding="true"
-        android:elevation="0dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorYellowWhiteTransparent">
-            <TextView
-                android:id="@+id/fragment_arena_card_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_alignParentBottom="true"
-                android:text="Place"
-                android:textSize="20sp"
-                android:textColor="@color/colorGreyTransparent"
-                android:textAlignment="center"/>
-
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardCornerRadius="10dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="40dp"
-        android:layout_marginBottom="35dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:cropToPadding="true"
         android:clipToPadding="true"

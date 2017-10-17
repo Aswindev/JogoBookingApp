@@ -5,6 +5,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
 /**
@@ -15,7 +16,7 @@ public class FadeInAndShowImage {
     public FadeInAndShowImage(final ImageView img) {
         Animation fadeOut = new AlphaAnimation(0, 1);
         fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
-        fadeOut.setDuration(500);
+        fadeOut.setDuration(300);
 
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             public void onAnimationEnd(Animation animation) {
@@ -26,6 +27,7 @@ public class FadeInAndShowImage {
             }
 
             public void onAnimationStart(Animation animation) {
+                img.animate().scaleX(1f).scaleY(1f).setDuration(300).start();
             }
         });
 
