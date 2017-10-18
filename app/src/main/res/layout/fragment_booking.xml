@@ -17,9 +17,10 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/booking_fragment_collapsing_toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="260dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:contentScrim="?attr/colorPrimary"
+            app:scrimAnimationDuration="300"
             app:expandedTitleTextAppearance="@android:color/transparent"
             android:fitsSystemWindows="true"
             >
@@ -36,12 +37,25 @@
                 android:id="@+id/booking_fragment_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="60dp"
                 android:layout_marginBottom="20dp"
                 app:layout_collapseMode="parallax"
                 >
 
             </android.support.v4.view.ViewPager>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                android:background="@color/colorPrimary"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/own_the_game"
+                    android:padding="15dp"/>
+            </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/booking_fragment_toolbar"
@@ -59,6 +73,27 @@
                         android:layout_height="50dp"
                         android:src="@drawable/jogo_logo"
                         android:layout_centerInParent="true" />
+                    <LinearLayout
+                        android:id="@+id/fragment_booking_cart_linear_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true">
+                        <TextView
+                            android:id="@+id/fragment_booking_cart_price_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0₹"
+                            android:paddingRight="5dp"
+                            android:textColor="@color/colorGreyTransparent"/>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_shopping_cart_black_24dp"/>
+                    </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
 
@@ -121,6 +156,37 @@
                         android:padding="5dp"
                         android:layout_gravity="center_horizontal"/>
 
+                    <RadioGroup
+                        android:id="@+id/fragment_booking_radio_group"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            android:id="@+id/fragment_booking_radio_button_5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:tag="5"
+                            android:text="5-a-side"
+                            android:paddingRight="25dp"
+                            android:checked="true"/>
+                        <RadioButton
+                            android:id="@+id/fragment_booking_radio_button_6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:tag="6"
+                            android:paddingRight="25dp"
+                            android:text="6-a-side"/>
+                        <RadioButton
+                            android:id="@+id/fragment_booking_radio_button_7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:tag="7"
+                            android:text="7-a-side"/>
+                    </RadioGroup>
+
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
@@ -146,7 +212,8 @@
                                 android:id="@+id/fragment_booking_text_view_1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -166,7 +233,8 @@
                                 android:id="@+id/fragment_booking_text_view_2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -186,7 +254,8 @@
                                 android:id="@+id/fragment_booking_text_view_3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -206,7 +275,8 @@
                                 android:id="@+id/fragment_booking_text_view_4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
 
@@ -237,7 +307,8 @@
                                 android:id="@+id/fragment_booking_text_view_5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -257,7 +328,8 @@
                                 android:id="@+id/fragment_booking_text_view_6"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -277,7 +349,8 @@
                                 android:id="@+id/fragment_booking_text_view_7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -297,7 +370,8 @@
                                 android:id="@+id/fragment_booking_text_view_8"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
 
@@ -327,7 +401,8 @@
                                 android:id="@+id/fragment_booking_text_view_9"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -347,7 +422,8 @@
                                 android:id="@+id/fragment_booking_text_view_10"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -367,7 +443,8 @@
                                 android:id="@+id/fragment_booking_text_view_11"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -387,7 +464,8 @@
                                 android:id="@+id/fragment_booking_text_view_12"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
 
@@ -417,7 +495,8 @@
                                 android:id="@+id/fragment_booking_text_view_13"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1200₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -437,7 +516,8 @@
                                 android:id="@+id/fragment_booking_text_view_14"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1800₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -457,7 +537,8 @@
                                 android:id="@+id/fragment_booking_text_view_15"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1800₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -477,7 +558,8 @@
                                 android:id="@+id/fragment_booking_text_view_16"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1800₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
 
@@ -507,7 +589,8 @@
                                 android:id="@+id/fragment_booking_text_view_17"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1800₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -527,7 +610,8 @@
                                 android:id="@+id/fragment_booking_text_view_18"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1800₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -547,7 +631,8 @@
                                 android:id="@+id/fragment_booking_text_view_19"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1800₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
                         <LinearLayout
@@ -567,7 +652,8 @@
                                 android:id="@+id/fragment_booking_text_view_20"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available"
+                                android:text="1800₹"
+                                style="@style/Base.TextAppearance.AppCompat.Caption"
                                 android:textAlignment="center"/>
                         </LinearLayout>
 

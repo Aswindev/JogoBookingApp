@@ -15,7 +15,7 @@ import com.crazylabs.jogobookingapp.R;
 
 import java.util.List;
 
-import static com.crazylabs.jogobookingapp.Fragments.BookingFragment.selectedPosition;
+import static com.crazylabs.jogobookingapp.MainActivity.selectedDayPosition;
 
 /**
  * Created by aswin on 14/10/2017.
@@ -43,7 +43,7 @@ public class DaysRecyclerViewAdapter extends RecyclerView.Adapter<DaysRecyclerVi
         daysViewHolder.vDate.setText(String.valueOf(ci.date));
         daysViewHolder.vMonth.setText(String.valueOf(ci.month));
 
-        if (selectedPosition==i) {
+        if (selectedDayPosition==i) {
             daysViewHolder.vRelativeLayout.setBackgroundResource(R.drawable.circle_black);
             daysViewHolder.vDate.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
             daysViewHolder.vDay.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));

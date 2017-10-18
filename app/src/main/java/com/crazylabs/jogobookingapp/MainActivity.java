@@ -16,6 +16,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private MenuItem prevMenuItem;
+    public static int selectedDayPosition;
+    public static int cachedPosition=0;
+    public static int cachedCartPrice=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
