@@ -1,6 +1,7 @@
 package com.crazylabs.jogobookingapp.Fragments;
 
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -28,6 +29,8 @@ import android.widget.TextView;
 import com.crazylabs.jogobookingapp.Adapters.DaysRecyclerViewAdapter;
 import com.crazylabs.jogobookingapp.Animations.FadeInAndShowImage;
 import com.crazylabs.jogobookingapp.Animations.FadeOutAndHideImage;
+import com.crazylabs.jogobookingapp.CartActivity;
+import com.crazylabs.jogobookingapp.DataModels.CartDataModel;
 import com.crazylabs.jogobookingapp.DataModels.DaysDataModel;
 import com.crazylabs.jogobookingapp.DataModels.SelectedSlotDataModel;
 import com.crazylabs.jogobookingapp.R;
@@ -35,6 +38,7 @@ import com.crazylabs.jogobookingapp.Utils.ArenaLocationClass;
 import com.crazylabs.jogobookingapp.Utils.ItemClickSupport;
 import com.crazylabs.jogobookingapp.Utils.ZoomOutPageTransformer;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,12 +112,21 @@ public class BookingFragment extends Fragment {
 //        Set negative margin for the arena cards to make multiple cards visible simultaneously
         OptimizeCardPadding();
 //        Decide when to show JOGO logo
+
         ToolbarStateCheck();
         InitHorizontalDateSelectorList(view);
 
         SetListenersForTimeSlots();
         SetListenerForRadioGroup();
         Log.d("initValues", "onCreateView: "+selectedDayPosition);
+
+        cartLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CartActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -137,6 +150,8 @@ public class BookingFragment extends Fragment {
         radioButton5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 morningPrice=1200;
                 evePrice=1800;
 
@@ -160,6 +175,8 @@ public class BookingFragment extends Fragment {
         radioButton6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                     morningPrice=1500;
                     evePrice=2000;
 
@@ -183,6 +200,7 @@ public class BookingFragment extends Fragment {
         radioButton7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 morningPrice=2000;
                 evePrice=2500;
 

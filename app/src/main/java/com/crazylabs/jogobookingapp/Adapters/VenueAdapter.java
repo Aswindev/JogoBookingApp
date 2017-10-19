@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.crazylabs.jogobookingapp.DataModels.CartDataModel;
 import com.crazylabs.jogobookingapp.MainActivity;
 import com.crazylabs.jogobookingapp.R;
 import com.crazylabs.jogobookingapp.DataModels.VenueDataModel;
@@ -32,6 +33,7 @@ public class VenueAdapter extends RecyclerView.Adapter<VenueAdapter.MyViewHolder
 
     private Context mContext;
     private List<VenueDataModel> venueList;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView venueLocation;
