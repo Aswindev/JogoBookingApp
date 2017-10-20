@@ -6,23 +6,29 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cart_card_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:elevation="3dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp">
 
             <TextView
                 android:id="@+id/cart_location"
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textSize="16dp"
+                android:paddingTop="5dp"
+                style="@style/TextAppearance.AppCompat.Title"
                 android:hint="Jogo Football Arena - Kadavntra"/>
 
             <TextView
@@ -30,8 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:textSize="16dp"
+                android:paddingTop="10dp"
+                style="@style/TextAppearance.AppCompat.Caption"
                 android:hint="5-a-side"/>
 
 
@@ -39,7 +45,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingTop="3dp">
 
 
                 <LinearLayout
@@ -48,19 +55,18 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                   <TextView
-                       android:id="@+id/cart_date"
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:padding="10dp"
-                       android:hint="20 OCTOBAR 2017"/>
-
+                    <TextView
+                        android:id="@+id/cart_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="20 OCTOBER 2017"
+                        android:textAllCaps="true"/>
                     <TextView
                         android:id="@+id/cart_day"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:hint="Monday"/>
+                        android:hint="Monday"
+                        android:textAllCaps="true"/>
 
                 </LinearLayout>
 
@@ -75,8 +81,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:padding="10dp"
-                        android:textSize="25dp"
+                        style="@style/Base.TextAppearance.AppCompat.Headline"
                         android:hint="05:00PM"/>
 
                 </LinearLayout>

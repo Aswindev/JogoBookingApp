@@ -8,9 +8,13 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.crazylabs.jogobookingapp.Adapters.ViewPagerAdapter;
+import com.crazylabs.jogobookingapp.DataModels.SelectedSlotDataModel;
 import com.crazylabs.jogobookingapp.Fragments.BookingFragment;
 import com.crazylabs.jogobookingapp.Fragments.ProfileFragment;
 import com.crazylabs.jogobookingapp.Fragments.VenuesFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
     public static int selectedDayPosition;
     public static int cachedPosition=0;
     public static int cachedCartPrice=0;
+    public static String currentSelectedLocation;
+    public static int currentSelectedGroundType=5;
+    public final static List<SelectedSlotDataModel> selectedSlotList = new ArrayList<SelectedSlotDataModel>();
+    public static int currentSelectedLocationCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

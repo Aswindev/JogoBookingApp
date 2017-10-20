@@ -8,6 +8,6 @@
     <color name="colorYellowWhiteTransparent">#dce2ddcb</color>
     <color name="colorBlack">#1C1B17</color>
     <color name="colorGrey">#5d5d5d</color>
-    <color name="colorGreyTransparent">#c838352c</color>
+    <color name="colorGreyTransparent">#c8000000</color>
     <color name="colorYellowLight">#7afedec0</color>
 </resources>

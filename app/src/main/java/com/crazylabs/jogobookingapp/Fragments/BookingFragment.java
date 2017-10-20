@@ -30,7 +30,6 @@ import com.crazylabs.jogobookingapp.Adapters.DaysRecyclerViewAdapter;
 import com.crazylabs.jogobookingapp.Animations.FadeInAndShowImage;
 import com.crazylabs.jogobookingapp.Animations.FadeOutAndHideImage;
 import com.crazylabs.jogobookingapp.CartActivity;
-import com.crazylabs.jogobookingapp.DataModels.CartDataModel;
 import com.crazylabs.jogobookingapp.DataModels.DaysDataModel;
 import com.crazylabs.jogobookingapp.DataModels.SelectedSlotDataModel;
 import com.crazylabs.jogobookingapp.R;
@@ -38,7 +37,6 @@ import com.crazylabs.jogobookingapp.Utils.ArenaLocationClass;
 import com.crazylabs.jogobookingapp.Utils.ItemClickSupport;
 import com.crazylabs.jogobookingapp.Utils.ZoomOutPageTransformer;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +46,11 @@ import java.util.List;
 
 import static com.crazylabs.jogobookingapp.MainActivity.cachedCartPrice;
 import static com.crazylabs.jogobookingapp.MainActivity.cachedPosition;
+import static com.crazylabs.jogobookingapp.MainActivity.currentSelectedGroundType;
+import static com.crazylabs.jogobookingapp.MainActivity.currentSelectedLocation;
+import static com.crazylabs.jogobookingapp.MainActivity.currentSelectedLocationCode;
 import static com.crazylabs.jogobookingapp.MainActivity.selectedDayPosition;
+import static com.crazylabs.jogobookingapp.MainActivity.selectedSlotList;
 
 
 /**
@@ -75,7 +77,6 @@ public class BookingFragment extends Fragment {
 
     private static DaysDataModel currentSelectedSlot;
     private static SelectedSlotDataModel selectedSlot;
-    public final static List<SelectedSlotDataModel> selectedSlotList = new ArrayList<SelectedSlotDataModel>();
 
 
     private int morningPrice=1200, evePrice=1800;
@@ -120,6 +121,7 @@ public class BookingFragment extends Fragment {
         SetListenerForRadioGroup();
         Log.d("initValues", "onCreateView: "+selectedDayPosition);
 
+        RefreshCartPrice();
         cartLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,19 +132,32 @@ public class BookingFragment extends Fragment {
         return view;
     }
 
+    private void RefreshCartPrice() {
+        Iterator<SelectedSlotDataModel> iterator = selectedSlotList.iterator();
+        cartPrice=0;
+
+        while(iterator.hasNext()) {
+            SelectedSlotDataModel currentObject = iterator.next();
+
+            Log.d("TimeslotlistenersLL", "inList: "+ currentObject.price);
+            cartPrice+=currentObject.price;
+        }
+        cachedCartPrice=cartPrice;
+    }
+
     private void RefreshViews() {
 //        Refresh time slot prices
         for (int i = 0; i < 20; i++) {
             if (i<12) {
-                timeSlotPriceTextView[i].setText(String.valueOf(morningPrice));
+                timeSlotPriceTextView[i].setText(String.valueOf(morningPrice)+"₹");
             } else {
-                timeSlotPriceTextView[i].setText(String.valueOf(evePrice));
+                timeSlotPriceTextView[i].setText(String.valueOf(evePrice)+"₹");
             }
         }
 //        Refresh selected slots
         refreshSlotSelection();
 //        Refresh cart price
-        cartPriceTextView.setText(String.valueOf(cartPrice));
+        cartPriceTextView.setText(String.valueOf(cartPrice)+"₹");
     }
 
     private void SetListenerForRadioGroup() {
@@ -163,9 +178,9 @@ public class BookingFragment extends Fragment {
 
                 for (int i = 0; i < 20; i++) {
                     if (i<12) {
-                        timeSlotPriceTextView[i].setText(String.valueOf(morningPrice));
+                        timeSlotPriceTextView[i].setText(String.valueOf(morningPrice)+"₹");
                     } else {
-                        timeSlotPriceTextView[i].setText(String.valueOf(evePrice));
+                        timeSlotPriceTextView[i].setText(String.valueOf(evePrice)+"₹");
                     }
                 }
 
@@ -188,9 +203,9 @@ public class BookingFragment extends Fragment {
 
                 for (int i = 0; i < 20; i++) {
                     if (i<12) {
-                        timeSlotPriceTextView[i].setText(String.valueOf(morningPrice));
+                        timeSlotPriceTextView[i].setText(String.valueOf(morningPrice)+"₹");
                     } else {
-                        timeSlotPriceTextView[i].setText(String.valueOf(evePrice));
+                        timeSlotPriceTextView[i].setText(String.valueOf(evePrice)+"₹");
                     }
                 }
 
@@ -212,9 +227,9 @@ public class BookingFragment extends Fragment {
 
                 for (int i = 0; i < 20; i++) {
                     if (i<12) {
-                        timeSlotPriceTextView[i].setText(String.valueOf(morningPrice));
+                        timeSlotPriceTextView[i].setText(String.valueOf(morningPrice)+"₹");
                     } else {
-                        timeSlotPriceTextView[i].setText(String.valueOf(evePrice));
+                        timeSlotPriceTextView[i].setText(String.valueOf(evePrice)+"₹");
                     }
                 }
             }
@@ -240,8 +255,9 @@ public class BookingFragment extends Fragment {
 //                collapse toolbar
                     appBarLayout.setExpanded(false);
 
-
-                    selectedSlot=new SelectedSlotDataModel(currentSelectedSlot,finalI);
+                    selectedSlot=new SelectedSlotDataModel(currentSelectedSlot,finalI,currentSelectedLocation,currentSelectedGroundType);
+                    selectedSlot.setFullDate(currentSelectedSlot.fullDate);
+                    selectedSlot.setLocationCode(currentSelectedLocationCode);
                     if (finalI<12) {
                         selectedSlot.setPrice(morningPrice);
                     } else {
@@ -251,14 +267,14 @@ public class BookingFragment extends Fragment {
 
                     if (!selectedSlotList.contains(selectedSlot)) {
                         selectedSlotList.add(selectedSlot);
-                        cartPrice+=selectedSlot.price;
+                        RefreshCartPrice();
                         cachedCartPrice=cartPrice;
-                        cartPriceTextView.setText(String.valueOf(cartPrice));
+                        cartPriceTextView.setText(String.valueOf(cartPrice)+"₹");
                     } else {
                         selectedSlotList.remove(selectedSlot);
-                        cartPrice-=selectedSlot.price;
+                        RefreshCartPrice();
                         cachedCartPrice=cartPrice;
-                        cartPriceTextView.setText(String.valueOf(cartPrice));
+                        cartPriceTextView.setText(String.valueOf(cartPrice)+"₹");
                     }
 
                     refreshSlotSelection();
@@ -334,12 +350,13 @@ public class BookingFragment extends Fragment {
 
         int tempYear, tempMonth, tempTime;
 
-        Log.d("Dates", "createListDays-> From: "+fromDate);
-        Log.d("Dates", "createListDays-> To: "+toDate);
+//        Log.d("Dates", "createListDays-> From: "+fromDate);
+//        Log.d("Dates", "createListDays-> To: "+toDate);
 
         cal.setTime(fromDate);
         while (cal.getTime().before(toDate)) {
             daysDataModel=new DaysDataModel(cal.get(Calendar.YEAR),monthFormat.format(cal.getTime()),cal.get(Calendar.DATE),dayFormat.format(cal.getTime()));
+            daysDataModel.setFullDate(cal.getTime());
             result.add(daysDataModel);
             cal.add(Calendar.DATE, 1);
         }
@@ -453,6 +470,8 @@ public class BookingFragment extends Fragment {
     public void onStart(){
         super.onStart();
 
+        RefreshCartPrice();
+
         carouselAdapter = new CarouselAdapter(getChildFragmentManager());
         viewPager.setAdapter(carouselAdapter);
         viewPager.setPageTransformer(false, new ZoomOutPageTransformer(viewPager.getPaddingLeft()));
@@ -469,6 +488,11 @@ public class BookingFragment extends Fragment {
                 if (position!=temp) {
                     temp=position;
                     locationNameTextView.setText(ArenaLocationClass.IMAGE_SUBTEXTS[position]);
+                    currentSelectedLocation=ArenaLocationClass.IMAGE_SUBTEXTS[position];
+                    currentSelectedLocationCode=position;
+                    radioButton5.setChecked(true);
+//                    clearSelectedtimeSlots();
+                    RefreshViews();
                 }
             }
 
