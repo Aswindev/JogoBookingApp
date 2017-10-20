@@ -13,7 +13,7 @@
        android:background="@color/colorPrimary">
 
        <ImageView
-           android:id="@+id/user_dp"
+           android:id="@+id/fragment_profile_user_dp_imageview"
            android:layout_width="100dp"
            android:layout_height="100dp"
            android:layout_gravity="center"
@@ -23,15 +23,17 @@
            android:layout_marginTop="30dp"/>
 
        <TextView
-           android:layout_alignBottom="@id/user_dp"
+           android:id="@+id/fragment_profile_username_textview"
+           android:layout_alignBottom="@id/fragment_profile_user_dp_imageview"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:gravity="center"
            android:hint="user name"
-           android:textSize="20dp"/>
+           android:textSize="20sp"/>
 
        <TextView
-           android:layout_alignBottom="@id/user_dp"
+           android:id="@+id/fragment_profile_email_id_textview"
+           android:layout_alignBottom="@id/fragment_profile_user_dp_imageview"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:gravity="center"
@@ -151,6 +153,7 @@
             android:background="#c0c0c0" />
 
         <LinearLayout
+            android:id="@+id/fragment_profile_sign_out_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

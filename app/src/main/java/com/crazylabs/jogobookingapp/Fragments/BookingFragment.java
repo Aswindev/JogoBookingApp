@@ -19,6 +19,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -91,6 +93,8 @@ public class BookingFragment extends Fragment {
     private RadioButton radioButton5;
     private RadioButton radioButton6;
     private RadioButton radioButton7;
+    private Animation animWobble;
+    private ImageView cartImageView;
 
 
     public BookingFragment() {
@@ -109,6 +113,10 @@ public class BookingFragment extends Fragment {
         RefreshViews();
 //        Hide JOGO logo initially
         new FadeOutAndHideImage(logoImage, 50);
+
+        animWobble = AnimationUtils.loadAnimation(this.getContext(),
+                R.anim.wobble_animation);
+
         cartLinearLayout.setVisibility(View.GONE);
 //        Set negative margin for the arena cards to make multiple cards visible simultaneously
         OptimizeCardPadding();
@@ -141,6 +149,9 @@ public class BookingFragment extends Fragment {
 
             Log.d("TimeslotlistenersLL", "inList: "+ currentObject.price);
             cartPrice+=currentObject.price;
+        }
+        if (cartPrice!=0) {
+            cartImageView.startAnimation(animWobble);
         }
         cachedCartPrice=cartPrice;
     }
@@ -417,7 +428,7 @@ public class BookingFragment extends Fragment {
         locationNameTextView= (TextView) view.findViewById(R.id.fragment_booking_location_textview);
         cartLinearLayout= (LinearLayout) view.findViewById(R.id.fragment_booking_cart_linear_layout);
         cartPriceTextView= (TextView) view.findViewById(R.id.fragment_booking_cart_price_textview);
-
+        cartImageView= (ImageView) view.findViewById(R.id.fragment_booking_cart_imageview);
         radioGroup= (RadioGroup) view.findViewById(R.id.fragment_booking_radio_group);
         radioButton5= (RadioButton) view.findViewById(R.id.fragment_booking_radio_button_5);
         radioButton6= (RadioButton) view.findViewById(R.id.fragment_booking_radio_button_6);

@@ -1,8 +1,12 @@
 package com.crazylabs.jogobookingapp;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,11 +16,15 @@ import com.crazylabs.jogobookingapp.DataModels.SelectedSlotDataModel;
 import com.crazylabs.jogobookingapp.Fragments.BookingFragment;
 import com.crazylabs.jogobookingapp.Fragments.ProfileFragment;
 import com.crazylabs.jogobookingapp.Fragments.VenuesFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     private ViewPager viewPager;
     private MenuItem prevMenuItem;
@@ -94,5 +102,21 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(venuesFragment);
         adapter.addFragment(profileFragment);
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Really Exit?")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        moveTaskToBack(true);
+                    }
+                }).create().show();
+
     }
 }

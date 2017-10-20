@@ -17,6 +17,7 @@
         app:cardBackgroundColor="@color/colorGreyTransparent"
         android:layout_alignParentRight="true">
         <RelativeLayout
+            android:id="@+id/activity_cart_pay_now_relative_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <ImageView
