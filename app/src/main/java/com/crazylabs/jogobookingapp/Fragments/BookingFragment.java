@@ -27,7 +27,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.crazylabs.jogobookingapp.Adapters.DaysRecyclerViewAdapter;
 import com.crazylabs.jogobookingapp.Animations.FadeInAndShowImage;
 import com.crazylabs.jogobookingapp.Animations.FadeOutAndHideImage;
@@ -36,8 +43,14 @@ import com.crazylabs.jogobookingapp.DataModels.DaysDataModel;
 import com.crazylabs.jogobookingapp.DataModels.SelectedSlotDataModel;
 import com.crazylabs.jogobookingapp.R;
 import com.crazylabs.jogobookingapp.Utils.ArenaLocationClass;
+import com.crazylabs.jogobookingapp.Utils.FragmentRefreshListener;
 import com.crazylabs.jogobookingapp.Utils.ItemClickSupport;
+import com.crazylabs.jogobookingapp.Utils.VolleySingleton;
 import com.crazylabs.jogobookingapp.Utils.ZoomOutPageTransformer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +60,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.crazylabs.jogobookingapp.MainActivity.cachedCartPrice;
+import static com.crazylabs.jogobookingapp.MainActivity.cachedLocationCode;
 import static com.crazylabs.jogobookingapp.MainActivity.cachedPosition;
 import static com.crazylabs.jogobookingapp.MainActivity.currentSelectedGroundType;
 import static com.crazylabs.jogobookingapp.MainActivity.currentSelectedLocation;
@@ -58,8 +72,9 @@ import static com.crazylabs.jogobookingapp.MainActivity.selectedSlotList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BookingFragment extends Fragment {
+public class BookingFragment extends Fragment implements FragmentRefreshListener {
 
+    String TAG="BookingFragmentTag";
 
     private CarouselAdapter carouselAdapter;
     private ViewPager viewPager;
@@ -83,6 +98,7 @@ public class BookingFragment extends Fragment {
 
     private int morningPrice=1200, evePrice=1800;
 
+    private Boolean[] timeSlotAvailable=new Boolean[20];
     private LinearLayout[] timeSlotLinearLayout=new LinearLayout[20];
     private TextView[] timeSlotPriceTextView=new TextView[20];
     private LinearLayout cartLinearLayout;
@@ -109,10 +125,12 @@ public class BookingFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_booking, container, false);
 
 
+        Log.d(TAG, "onCreateView: cartprice"+cartPrice);
         InitViews(view);
+
         RefreshViews();
 //        Hide JOGO logo initially
-        new FadeOutAndHideImage(logoImage, 50);
+        new FadeOutAndHideImage(logoImage, 0);
 
         animWobble = AnimationUtils.loadAnimation(this.getContext(),
                 R.anim.wobble_animation);
@@ -123,7 +141,7 @@ public class BookingFragment extends Fragment {
 //        Decide when to show JOGO logo
 
         ToolbarStateCheck();
-        InitHorizontalDateSelectorList(view);
+        InitHorizontalDateSelectorList();
 
         SetListenersForTimeSlots();
         SetListenerForRadioGroup();
@@ -137,7 +155,79 @@ public class BookingFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+
+
+        carouselAdapter = new CarouselAdapter(getChildFragmentManager());
+        viewPager.setAdapter(carouselAdapter);
+        viewPager.setPageTransformer(false, new ZoomOutPageTransformer(viewPager.getPaddingLeft()));
+        viewPager.setOffscreenPageLimit(carouselAdapter.getCount());
+//        viewPager.setPageMargin(15);
+        viewPager.setClipToPadding(false);
+        carouselAdapter.notifyDataSetChanged();
+        viewPager.setPadding(0, 0, 0, 0);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            int temp=0;
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                Log.d("viewpagercurrentpage", "onPageScrolled: "+ArenaLocationClass.IMAGE_SUBTEXTS[position]);
+                if (position!=temp) {
+                    Log.d(TAG, "onPageScrolled: "+position+" "+temp);
+                    temp=position;
+                    locationNameTextView.setText(ArenaLocationClass.IMAGE_SUBTEXTS[position]);
+                    currentSelectedLocation=ArenaLocationClass.IMAGE_SUBTEXTS[position];
+                    currentSelectedLocationCode=position;
+                    cachedLocationCode=position;
+
+                    radioButton5.setChecked(true);
+
+//                Clear all selections and cart on changing radiobutton
+                    clearSelectedtimeSlots();
+                    currentSelectedSlot=result.get(0);
+                    selectedDayPosition=0;
+                    cachedPosition=0;
+                    ca.notifyDataSetChanged();
+
+                    RefreshViews();
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+//                Log.d("viewpagercurrentpage", "onPageSelected: "+ArenaLocationClass.IMAGE_SUBTEXTS[position]);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+
+
         return view;
+    }
+
+    private void InitLocation() {
+        Log.d(TAG, "InitLocation: ");
+        currentSelectedLocationCode=cachedLocationCode;
+        locationNameTextView.setText(ArenaLocationClass.IMAGE_SUBTEXTS[currentSelectedLocationCode]);
+        currentSelectedLocation=ArenaLocationClass.IMAGE_SUBTEXTS[currentSelectedLocationCode];
+
+        viewPager.setCurrentItem(currentSelectedLocationCode);
+
+//        radioButton5.setChecked(true);
+
+//                Clear all selections and cart on changing radiobutton
+//        currentSelectedSlot=result.get(0);
+//        selectedDayPosition=0;
+//        cachedPosition=0;
+        ca.notifyDataSetChanged();
+
+        RefreshViews();
+
     }
 
     private void RefreshCartPrice() {
@@ -274,7 +364,7 @@ public class BookingFragment extends Fragment {
                     } else {
                         selectedSlot.setPrice(evePrice);
                     }
-                    Log.d("TimeslotlistenersLL", "onClick: "+ selectedSlotList.contains(selectedSlot));
+//                    Log.d("TimeslotlistenersLL", "onClick: "+ selectedSlotList.contains(selectedSlot));
 
                     if (!selectedSlotList.contains(selectedSlot)) {
                         selectedSlotList.add(selectedSlot);
@@ -309,7 +399,7 @@ public class BookingFragment extends Fragment {
 
 //            Log.d("TimeslotlistenersLL", "selecteddate: "+ currentObject.date+" selectedDayPosition");
 
-            if (currentObject.date==result.get(selectedDayPosition).date) {
+            if (currentObject.fullDate==result.get(selectedDayPosition).fullDate) {
                 for (int i = 0; i < 20; i++) {
                     if (currentObject.time==i) {
                         timeSlotLinearLayout[i].setBackgroundResource(R.drawable.hollow_rectangle);
@@ -320,8 +410,7 @@ public class BookingFragment extends Fragment {
         }
     }
 
-    private void InitHorizontalDateSelectorList(View view) {
-        daysRecList = (RecyclerView) view.findViewById(R.id.fragment_booking_days_recyclerview);
+    private void InitHorizontalDateSelectorList() {
         daysRecList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -331,6 +420,12 @@ public class BookingFragment extends Fragment {
 
 //        set first date as selected
         currentSelectedSlot=result.get(cachedPosition);
+
+//        Check availability in first date
+//        http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com/Jogo/GetBookingByDate?date=20171018&groundId=1
+
+        CheckForAvailability(currentSelectedSlot);
+
 //        Listener for date selection recyclerview
         ItemClickSupport.addTo(daysRecList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -341,11 +436,24 @@ public class BookingFragment extends Fragment {
                 refreshSlotSelection();
                 ca.notifyDataSetChanged();
 
+                CheckForAvailability(currentSelectedSlot);
+
 //                collapse toolbar
                 appBarLayout.setExpanded(false);
 
             }
         });
+    }
+
+    private void CheckForAvailability(DaysDataModel currentSelectedSlot) {
+        final SimpleDateFormat BookingDateFormat = new SimpleDateFormat("yyyyMMdd");
+        String formattedDate=BookingDateFormat.format(currentSelectedSlot.fullDate);
+        Log.d(TAG, "InitHorizontalDateSelectorList: "+BookingDateFormat.format(currentSelectedSlot.fullDate));
+        Log.d(TAG, "InitHorizontalDateSelectorList: "+currentSelectedLocationCode);
+        String url="http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com/Jogo/GetBookingByDate?date="+formattedDate+"&groundId="+currentSelectedLocationCode;
+//        volleyStringRequest(url);
+        volleyJsonObjectRequest(url);
+//        volleyJsonArrayRequest(url);
     }
 
     private List<DaysDataModel> createListDays(final int size) {
@@ -356,10 +464,10 @@ public class BookingFragment extends Fragment {
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEE");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
-        cal.add(Calendar.MONTH,3);//Three months from now
+        cal.add(Calendar.MONTH,2);//Three months from now
         Date toDate = cal.getTime();// Get the Date object
 
-        int tempYear, tempMonth, tempTime;
+//        int tempYear, tempMonth, tempTime;
 
 //        Log.d("Dates", "createListDays-> From: "+fromDate);
 //        Log.d("Dates", "createListDays-> To: "+toDate);
@@ -420,6 +528,8 @@ public class BookingFragment extends Fragment {
     }
 
     private void InitViews(View view) {
+        daysRecList = (RecyclerView) view.findViewById(R.id.fragment_booking_days_recyclerview);
+
         viewPager= (ViewPager) view.findViewById(R.id.booking_fragment_view_pager);
         appBarLayout= (AppBarLayout) view.findViewById(R.id.booking_fragment_app_bar_layout);
         collapsingToolbarLayout= (CollapsingToolbarLayout) view.findViewById(R.id.booking_fragment_collapsing_toolbar_layout);
@@ -483,40 +593,14 @@ public class BookingFragment extends Fragment {
 
         RefreshCartPrice();
 
-        carouselAdapter = new CarouselAdapter(getChildFragmentManager());
-        viewPager.setAdapter(carouselAdapter);
-        viewPager.setPageTransformer(false, new ZoomOutPageTransformer(viewPager.getPaddingLeft()));
-        viewPager.setOffscreenPageLimit(carouselAdapter.getCount());
-//        viewPager.setPageMargin(15);
-        viewPager.setClipToPadding(false);
-        carouselAdapter.notifyDataSetChanged();
-        viewPager.setPadding(0, 0, 0, 0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            int temp=-1;
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                Log.d("viewpagercurrentpage", "onPageScrolled: "+ArenaLocationClass.IMAGE_SUBTEXTS[position]);
-                if (position!=temp) {
-                    temp=position;
-                    locationNameTextView.setText(ArenaLocationClass.IMAGE_SUBTEXTS[position]);
-                    currentSelectedLocation=ArenaLocationClass.IMAGE_SUBTEXTS[position];
-                    currentSelectedLocationCode=position;
-                    radioButton5.setChecked(true);
-//                    clearSelectedtimeSlots();
-                    RefreshViews();
-                }
-            }
+        Log.d(TAG, "onStart: ");
+        InitLocation();
 
-            @Override
-            public void onPageSelected(int position) {
-//                Log.d("viewpagercurrentpage", "onPageSelected: "+ArenaLocationClass.IMAGE_SUBTEXTS[position]);
-            }
+    }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+    @Override
+    public void refreshFragment() {
+        RefreshViews();
     }
 
     private class CarouselAdapter extends FragmentStatePagerAdapter {
@@ -537,8 +621,92 @@ public class BookingFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return 5;
+            return ArenaLocationClass.locationCount;
         }
     }
 
+
+//    Volley methods
+
+    public void volleyStringRequest(String url){
+
+//        SimpleDateFormat BookingDateFormat = new SimpleDateFormat("yyyyMMdd");
+        String  REQUEST_TAG = "com.crazylabs.jogobookingapp.volleyStringRequest";
+
+        StringRequest strReq = new StringRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "volleyStringRequest onResponse: "+response);
+//                try {
+//                    JSONObject responseObject = new JSONObject(response.toString());
+//                    String responseBookingId= (String) responseObject.get("bookingId");
+//                    String responseGroundId=responseObject.getString("groundId");
+//                    String responseStatus=responseObject.getString("status");
+//                    Log.d(TAG, "volleyStringRequest onResponseBookingId: "+responseBookingId);
+//                    Log.d(TAG, "volleyStringRequest onResponseGroundId: "+responseGroundId);
+//                    Log.d(TAG, "volleyStringRequest onResponseStatus: "+responseStatus);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "volleyStringRequest Error: " + error.getMessage());
+                Toast.makeText(getContext(), "Payment failed, please make sure you are connected to the internet.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Adding String request to request queue
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(strReq, REQUEST_TAG);
+    }
+    public void volleyJsonObjectRequest(String url){
+
+        String  REQUEST_TAG = "com.crazylabs.jogobookingapp.volleyJsonObjectRequest";
+
+        JsonObjectRequest jsonObjectReq = new JsonObjectRequest(url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG,"volleyJsonObjectRequest "+ response.toString());
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "volleyJsonObjectRequest Error: " + error.getMessage());
+                Toast.makeText(getContext(), "Payment failed, please make sure you are connected to the internet.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Adding JsonObject request to request queue
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonObjectReq,REQUEST_TAG);
+    }
+
+    public void volleyJsonArrayRequest(String url){
+
+        String  REQUEST_TAG = "com.crazylabs.jogobookingapp.volleyJsonArrayRequest";
+
+        JsonArrayRequest jsonArrayReq = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d(TAG,"volleyJsonArrayRequest "+ response.toString());
+
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "volleyJsonArrayRequest Error: " + error.getMessage());
+                Toast.makeText(getContext(), "Payment failed, please make sure you are connected to the internet.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Adding JsonObject request to request queue
+        VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(jsonArrayReq, REQUEST_TAG);
+    }
 }

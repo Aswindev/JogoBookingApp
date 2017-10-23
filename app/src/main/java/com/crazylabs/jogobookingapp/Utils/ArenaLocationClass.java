@@ -7,6 +7,7 @@ import com.crazylabs.jogobookingapp.R;
  */
 
 public class ArenaLocationClass {
+    public static int locationCount=5;
     public static int IMAGE_IDS[] = {R.drawable.panampilly, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round};
     public static String IMAGE_SUBTEXTS[] = {"kadavanthra","2","3","4","5"};
 

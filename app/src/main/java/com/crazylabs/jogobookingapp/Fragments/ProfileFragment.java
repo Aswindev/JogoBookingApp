@@ -12,11 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.crazylabs.jogobookingapp.MainActivity;
 import com.crazylabs.jogobookingapp.R;
 import com.crazylabs.jogobookingapp.SignInActivity;
-import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
+
 
 
 /**
@@ -55,6 +54,7 @@ public class ProfileFragment extends Fragment {
 
                 FirebaseAuth.getInstance().signOut();
                 Intent k = new Intent(getContext(), SignInActivity.class);
+                k.putExtra("signOut",true);
                 startActivity(k);
             }
         });
