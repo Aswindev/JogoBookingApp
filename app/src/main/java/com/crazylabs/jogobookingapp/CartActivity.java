@@ -108,6 +108,9 @@ public class CartActivity extends AppCompatActivity implements CartListener {
 
                                 url="http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com//Jogo/SetTempBooking?userId="+userId+"&groundId="+groundId+"&slot="+slot+"&bookingDate="+bookingDate;
                                 volleyStringRequest(url);
+                                cartList.clear();
+                                selectedSlotList.clear();
+                                RefreshTotalCartPrice();
                             }
                         }).create().show();
             }

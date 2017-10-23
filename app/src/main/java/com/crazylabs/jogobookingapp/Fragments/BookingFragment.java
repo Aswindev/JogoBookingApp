@@ -98,7 +98,7 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
 
     private int morningPrice=1200, evePrice=1800;
 
-    private Boolean[] timeSlotAvailable=new Boolean[20];
+    private Boolean[] timeSlotUnavailable=new Boolean[20];
     private LinearLayout[] timeSlotLinearLayout=new LinearLayout[20];
     private TextView[] timeSlotPriceTextView=new TextView[20];
     private LinearLayout cartLinearLayout;
@@ -111,6 +111,8 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
     private RadioButton radioButton7;
     private Animation animWobble;
     private ImageView cartImageView;
+    private String bookingId, groundId, status;
+    private int tempSlotNumber;
 
 
     public BookingFragment() {
@@ -448,12 +450,13 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
     private void CheckForAvailability(DaysDataModel currentSelectedSlot) {
         final SimpleDateFormat BookingDateFormat = new SimpleDateFormat("yyyyMMdd");
         String formattedDate=BookingDateFormat.format(currentSelectedSlot.fullDate);
-        Log.d(TAG, "InitHorizontalDateSelectorList: "+BookingDateFormat.format(currentSelectedSlot.fullDate));
-        Log.d(TAG, "InitHorizontalDateSelectorList: "+currentSelectedLocationCode);
+//        Log.d(TAG, "InitHorizontalDateSelectorList: "+BookingDateFormat.format(currentSelectedSlot.fullDate));
+//        Log.d(TAG, "InitHorizontalDateSelectorList: "+currentSelectedLocationCode);
         String url="http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com/Jogo/GetBookingByDate?date="+formattedDate+"&groundId="+currentSelectedLocationCode;
 //        volleyStringRequest(url);
-        volleyJsonObjectRequest(url);
+        volleyJsonObjectRequest(url,formattedDate,currentSelectedLocationCode);
 //        volleyJsonArrayRequest(url);
+
     }
 
     private List<DaysDataModel> createListDays(final int size) {
@@ -585,6 +588,7 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
         timeSlotPriceTextView[17]= (TextView) view.findViewById(R.id.fragment_booking_text_view_18);
         timeSlotPriceTextView[18]= (TextView) view.findViewById(R.id.fragment_booking_text_view_19);
         timeSlotPriceTextView[19]= (TextView) view.findViewById(R.id.fragment_booking_text_view_20);
+
     }
 
     @Override
@@ -592,6 +596,7 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
         super.onStart();
 
         RefreshCartPrice();
+        CheckForAvailability(currentSelectedSlot);
 
         Log.d(TAG, "onStart: ");
         InitLocation();
@@ -637,17 +642,6 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "volleyStringRequest onResponse: "+response);
-//                try {
-//                    JSONObject responseObject = new JSONObject(response.toString());
-//                    String responseBookingId= (String) responseObject.get("bookingId");
-//                    String responseGroundId=responseObject.getString("groundId");
-//                    String responseStatus=responseObject.getString("status");
-//                    Log.d(TAG, "volleyStringRequest onResponseBookingId: "+responseBookingId);
-//                    Log.d(TAG, "volleyStringRequest onResponseGroundId: "+responseGroundId);
-//                    Log.d(TAG, "volleyStringRequest onResponseStatus: "+responseStatus);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
             }
         }, new Response.ErrorListener() {
 
@@ -661,15 +655,63 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
         // Adding String request to request queue
         VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(strReq, REQUEST_TAG);
     }
-    public void volleyJsonObjectRequest(String url){
+    public void volleyJsonObjectRequest(String url, final String formattedDate, final int currentSelectedLocationCode){
+
+        final String tempCurrentSelectedLocationCode= String.valueOf(currentSelectedLocationCode);
 
         String  REQUEST_TAG = "com.crazylabs.jogobookingapp.volleyJsonObjectRequest";
+
+        for (int i = 0; i < 20; i++) {
+            timeSlotUnavailable[i]=false;
+        }
 
         JsonObjectRequest jsonObjectReq = new JsonObjectRequest(url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG,"volleyJsonObjectRequest "+ response.toString());
+                        try {
+                            JSONArray resultArray = response.getJSONArray("data");
+                            for(int i = 0; i < resultArray.length(); i++) {
+                                JSONObject obj = resultArray.getJSONObject(i);
+//                                Log.d(TAG,"volleyJsonObjectRequest "+ obj.toString());
+
+                                //store your variable
+                                bookingId = (String) obj.get("bookingId");
+                                groundId = (String) obj.get("groundId");
+                                status = (String) obj.get("status");
+//                                Log.d(TAG,"volleyJsonObjectRequest "+ bookingId+" "+groundId+" "+status);
+//                                Log.d(TAG,"volleyJsonObjectRequest "+ bookingId.substring(bookingId.length()-2));
+//                                Log.d(TAG,"volleyJsonObjectRequest "+ bookingId.substring(0,8));
+//                                String substr = word.substring(word.length() - 3);
+                                tempSlotNumber=Integer.parseInt(bookingId.substring(bookingId.length()-2));
+//                                Log.d(TAG,"volleyJsonObjectRequest TempSlotNumber "+ tempSlotNumber);
+//
+                                if (tempCurrentSelectedLocationCode.equals(groundId)) {
+//                                    Log.d(TAG,"volleyJsonObjectRequest LocationCodeEqual "+tempCurrentSelectedLocationCode+" "+groundId);
+
+                                    if (formattedDate.equals(bookingId.substring(0,8))) {
+//                                        Log.d(TAG,"volleyJsonObjectRequest CurrentDateEqual "+formattedDate+" "+bookingId.substring(0,8));
+                                        timeSlotUnavailable[tempSlotNumber]=true;
+                                    }
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+//                        Log.d(TAG,"volleyJsonObjectRequest "+ response.toString());
+
+                        for (int i = 0; i < 20; i++) {
+                            if (timeSlotUnavailable[i]) {
+                                timeSlotLinearLayout[i].setBackgroundResource(0);
+                                timeSlotLinearLayout[i].setEnabled(false);
+                                timeSlotLinearLayout[i].setAlpha((float) 0.5);
+                            } else {
+                                timeSlotLinearLayout[i].setEnabled(true);
+                                timeSlotLinearLayout[i].setAlpha((float) 1);
+                            }
+                        }
+
 
                     }
                 }, new Response.ErrorListener() {
