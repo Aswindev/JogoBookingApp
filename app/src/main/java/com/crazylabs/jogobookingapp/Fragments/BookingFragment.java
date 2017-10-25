@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -67,6 +69,7 @@ import static com.crazylabs.jogobookingapp.MainActivity.currentSelectedLocation;
 import static com.crazylabs.jogobookingapp.MainActivity.currentSelectedLocationCode;
 import static com.crazylabs.jogobookingapp.MainActivity.selectedDayPosition;
 import static com.crazylabs.jogobookingapp.MainActivity.selectedSlotList;
+import static com.crazylabs.jogobookingapp.MainActivity.snackbarContainerRelativeLayout;
 
 
 /**
@@ -113,6 +116,7 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
     private ImageView cartImageView;
     private String bookingId, groundId, status;
     private int tempSlotNumber;
+
 
 
     public BookingFragment() {
@@ -182,8 +186,7 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
                     currentSelectedLocationCode=position;
                     cachedLocationCode=position;
 
-                    radioButton5.setChecked(true);
-
+                    InitRadioButtons(position);
 //                Clear all selections and cart on changing radiobutton
                     clearSelectedtimeSlots();
                     currentSelectedSlot=result.get(0);
@@ -212,11 +215,33 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
         return view;
     }
 
+    private void InitRadioButtons(int position) {
+        radioButton5.setEnabled(ArenaLocationClass.aBoolean5s[position]);
+        radioButton6.setEnabled(ArenaLocationClass.aBoolean6s[position]);
+        radioButton7.setEnabled(ArenaLocationClass.aBoolean7s[position]);
+
+        if (ArenaLocationClass.aBoolean5s[position]) {
+            radioButton5.setChecked(true);
+            radioButton6.setChecked(false);
+            radioButton7.setChecked(false);
+        } else if (ArenaLocationClass.aBoolean6s[position]) {
+            radioButton5.setChecked(false);
+            radioButton6.setChecked(true);
+            radioButton7.setChecked(false);
+        }else if (ArenaLocationClass.aBoolean7s[position]) {
+            radioButton5.setChecked(false);
+            radioButton6.setChecked(false);
+            radioButton7.setChecked(true);
+        }
+    }
+
     private void InitLocation() {
         Log.d(TAG, "InitLocation: ");
         currentSelectedLocationCode=cachedLocationCode;
         locationNameTextView.setText(ArenaLocationClass.IMAGE_SUBTEXTS[currentSelectedLocationCode]);
         currentSelectedLocation=ArenaLocationClass.IMAGE_SUBTEXTS[currentSelectedLocationCode];
+
+        InitRadioButtons(currentSelectedLocationCode);
 
         viewPager.setCurrentItem(currentSelectedLocationCode);
 
@@ -373,11 +398,30 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
                         RefreshCartPrice();
                         cachedCartPrice=cartPrice;
                         cartPriceTextView.setText(String.valueOf(cartPrice)+"₹");
+
+
+
+                        Snackbar snackbar = Snackbar
+                                .make(snackbarContainerRelativeLayout, "Item added to cart", Snackbar.LENGTH_LONG);
+                        View sbView = snackbar.getView();
+                        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                        textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        snackbar.show();
+
                     } else {
                         selectedSlotList.remove(selectedSlot);
                         RefreshCartPrice();
                         cachedCartPrice=cartPrice;
                         cartPriceTextView.setText(String.valueOf(cartPrice)+"₹");
+
+
+                        Snackbar snackbar = Snackbar
+                                .make(snackbarContainerRelativeLayout, "Item removed from cart", Snackbar.LENGTH_LONG);
+                        View sbView = snackbar.getView();
+                        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                        textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        snackbar.show();
+
                     }
 
                     refreshSlotSelection();
@@ -463,9 +507,9 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
         Calendar cal = Calendar.getInstance(); //Get the Calendar instance
         Date fromDate = cal.getTime();// Get the Date object
 
+
         SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEE");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
         cal.add(Calendar.MONTH,2);//Three months from now
         Date toDate = cal.getTime();// Get the Date object
@@ -542,6 +586,7 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
         cartLinearLayout= (LinearLayout) view.findViewById(R.id.fragment_booking_cart_linear_layout);
         cartPriceTextView= (TextView) view.findViewById(R.id.fragment_booking_cart_price_textview);
         cartImageView= (ImageView) view.findViewById(R.id.fragment_booking_cart_imageview);
+
         radioGroup= (RadioGroup) view.findViewById(R.id.fragment_booking_radio_group);
         radioButton5= (RadioButton) view.findViewById(R.id.fragment_booking_radio_button_5);
         radioButton6= (RadioButton) view.findViewById(R.id.fragment_booking_radio_button_6);
@@ -657,12 +702,34 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
     }
     public void volleyJsonObjectRequest(String url, final String formattedDate, final int currentSelectedLocationCode){
 
+        Calendar calNow = Calendar.getInstance(); //Get the Calendar instance
+        Date fromDate = calNow.getTime();// Get the Date object
+
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+
+        Log.d(TAG, "volleyJsonObjectRequest fullDate: "+calNow.getTime());
+        int currentHour= Integer.parseInt(timeFormat.format(calNow.getTime()));
+        String currentDate= dateFormat.format(calNow.getTime());
+        int currentHourCode=-1;
+
+        if (currentHour>4 && currentHour<24) {
+            currentHourCode = currentHour - 5;
+        } else {
+            currentHourCode= -1;
+        }
+        Log.d(TAG, "volleyJsonObjectRequest HourCode: "+currentHourCode);
+        Log.d(TAG, "volleyJsonObjectRequest : "+formattedDate+" "+currentDate);
+
         final String tempCurrentSelectedLocationCode= String.valueOf(currentSelectedLocationCode);
 
         String  REQUEST_TAG = "com.crazylabs.jogobookingapp.volleyJsonObjectRequest";
 
         for (int i = 0; i < 20; i++) {
             timeSlotUnavailable[i]=false;
+            if (formattedDate.equals(currentDate) && currentHourCode!=-1 && i<=currentHourCode) {
+                timeSlotUnavailable[i]=true;
+            }
         }
 
         JsonObjectRequest jsonObjectReq = new JsonObjectRequest(url, null,

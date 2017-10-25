@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
 import com.crazylabs.jogobookingapp.Adapters.ViewPagerAdapter;
 import com.crazylabs.jogobookingapp.DataModels.SelectedSlotDataModel;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public final static List<SelectedSlotDataModel> selectedSlotList = new ArrayList<SelectedSlotDataModel>();
     public static int currentSelectedLocationCode=0;
     public static int cachedLocationCode;
+    public static RelativeLayout snackbarContainerRelativeLayout;
 
     private FragmentRefreshListener fragmentRefreshListener;
     private Boolean refreshFragments=false;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final BottomNavigationView bottomNavigationView= (BottomNavigationView) findViewById(R.id.activity_main_bottom_navigation);
+        snackbarContainerRelativeLayout= (RelativeLayout) findViewById(R.id.activity_main_snackbar_container_relative_layout);
 
         viewPager= (ViewPager) findViewById(R.id.activity_main_viewpager);
         setupViewPager(viewPager);

@@ -24,6 +24,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.razorpay.Checkout;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -77,6 +78,7 @@ public class SignInActivity extends AppCompatActivity {
                                 new ResultCallback<Status>() {
                                     @Override
                                     public void onResult(@NonNull Status status) {
+                                        Checkout.clearUserData(getApplicationContext());
                                     }
                                 });
                     }else {

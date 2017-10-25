@@ -3,6 +3,9 @@ package com.crazylabs.jogobookingapp;
 import android.animation.Animator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,8 +56,7 @@ public class CartActivity extends AppCompatActivity implements CartListener {
     private ImageView arrowImageView;
     private int totalCartPrice=0;
     private TextView payNowTextView;
-    private Animation animTranslation;
-    private RelativeLayout payNowRelativeLayout;
+    private RelativeLayout payNowRelativeLayout, rootRelativeLayout;
     private String TAG="CartActivityTag";
     private String url;
     private String userId,groundId,slot,bookingDate;
@@ -75,7 +77,7 @@ public class CartActivity extends AppCompatActivity implements CartListener {
         adapter = new CartAdapter(getApplicationContext(), fillcartList(), CartActivity.this);
         recyclerView.setAdapter(adapter);
 
-        animTranslation = AnimationUtils.loadAnimation(getApplicationContext(),
+        Animation animTranslation = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.horizontal_translation_animation);
         arrowImageView.startAnimation(animTranslation);
 
@@ -83,36 +85,56 @@ public class CartActivity extends AppCompatActivity implements CartListener {
             @Override
             public void onClick(View v) {
 
-                new AlertDialog.Builder(CartActivity.this)
-                        .setTitle("Confirm")
-                        .setMessage("Are you sure you want to proceed to payment?")
-                        .setNegativeButton(android.R.string.no, null)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                if (totalCartPrice==0) {
 
-                            public void onClick(DialogInterface arg0, int arg1) {
+                    Snackbar snackbar = Snackbar
+                            .make(rootRelativeLayout, "Please go back and select a slot", Snackbar.LENGTH_LONG);
+                    View sbView = snackbar.getView();
+                    TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                    snackbar.show();
+
+                }else {
+
+                    new AlertDialog.Builder(CartActivity.this)
+                            .setTitle("Confirm")
+                            .setMessage("Are you sure you want to proceed to payment?")
+                            .setNegativeButton(android.R.string.no, null)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface arg0, int arg1) {
 
 //                                userId=1
 //                                groundId=2
 //                                slot=12,13
 //                                bookingDate=20171103,20171103
 
-                                userId=FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                groundId= String.valueOf(selectedSlotList.get(0).locationCode);
+                                    userId=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                    groundId= String.valueOf(selectedSlotList.get(0).locationCode);
 //                                slot = String.valueOf(selectedSlotList.get(0).time);
 //                                bookingDate= String.valueOf(BookingIdFormat.format(selectedSlotList.get(0).fullDate));
 
-                                Log.d(TAG, "userId: "+ userId);
-                                Log.d(TAG, "groundId: "+groundId);
-                                Log.d(TAG, "slot: "+slot);
-                                Log.d(TAG, "bookingDate: "+bookingDate);
+//                                Log.d(TAG, "userId: "+ userId);
+//                                Log.d(TAG, "groundId: "+groundId);
+//                                Log.d(TAG, "slot: "+slot);
+//                                Log.d(TAG, "bookingDate: "+bookingDate);
 
-                                url="http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com//Jogo/SetTempBooking?userId="+userId+"&groundId="+groundId+"&slot="+slot+"&bookingDate="+bookingDate;
-                                volleyStringRequest(url);
-                                cartList.clear();
-                                selectedSlotList.clear();
-                                RefreshTotalCartPrice();
-                            }
-                        }).create().show();
+                                    url="http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com//Jogo/SetTempBooking?userId="+userId+"&groundId="+groundId+"&slot="+slot+"&bookingDate="+bookingDate;
+                                    volleyStringRequest(url);
+
+                                    Intent intent = new Intent(getApplicationContext(), MerchantActivity.class);
+                                    intent.putExtra("amount",totalCartPrice);
+
+                                    cartList.clear();
+                                    selectedSlotList.clear();
+                                    RefreshTotalCartPrice();
+
+                                    startActivity(intent);
+
+                                }
+                            }).create().show();
+
+                }
             }
         });
 
@@ -195,6 +217,7 @@ public class CartActivity extends AppCompatActivity implements CartListener {
         arrowImageView= (ImageView) findViewById(R.id.activity_card_arrow_image_view);
         payNowTextView= (TextView) findViewById(R.id.activity_cart_pay_now_textview);
         payNowRelativeLayout= (RelativeLayout) findViewById(R.id.activity_cart_pay_now_relative_layout);
+        rootRelativeLayout= (RelativeLayout) findViewById(R.id.cart_activity_root_relative_layout);
     }
 
     @Override

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.crazylabs.jogobookingapp.MainActivity">
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/activity_main_bottom_navigation"
         android:layout_width="match_parent"
@@ -15,6 +16,7 @@
         app:itemIconTint="@drawable/bottom_navigation_color_selector"
         app:menu="@menu/menu_bottom_navigation" />
     <RelativeLayout
+        android:id="@+id/activity_main_bottom_navigation_size_adjuster_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_above="@id/activity_main_bottom_navigation"
@@ -29,5 +31,10 @@
         android:layout_alignParentTop="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <RelativeLayout
+        android:id="@+id/activity_main_snackbar_container_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </RelativeLayout>
 
 </RelativeLayout>
