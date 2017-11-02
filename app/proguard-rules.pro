@@ -43,3 +43,9 @@
 -keepclasseswithmembers class * {
   public void onPayment*(...);
 }
+
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+}
+
+-dontwarn okio.**

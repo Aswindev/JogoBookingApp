@@ -8,8 +8,121 @@
     tools:context="com.crazylabs.jogobookingapp.MerchantActivity">
 
     <ImageView
+        android:id="@+id/activity_merchant_jogo_logo_imageview"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/jogo_logo"/>
+    <ImageView
+        android:layout_below="@id/activity_merchant_jogo_logo_imageview"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/own_the_game"/>
+    <LinearLayout
+        android:id="@+id/activity_merchant_success_text_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="Thank You for booking with us."
+            android:textAlignment="center"
+            android:textSize="24sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp"
+            android:textStyle="bold"
+            android:text="Have a great day."
+            android:textAlignment="center"
+            android:textSize="24sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_merchant_failure_text_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="We're sorry for the inconvenience caused to you, please try again later."
+            android:textAlignment="center"
+            android:textSize="24sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp"
+            android:textStyle="bold"
+            android:text="Have a great day."
+            android:textAlignment="center"
+            android:textSize="24sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/activity_merchant_cancelled_text_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Did something go wrong?"
+            android:textAlignment="center"
+            android:textSize="24sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            android:text="Please try again later."
+            android:textAlignment="center"
+            android:textSize="24sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp"
+            android:textStyle="bold"
+            android:text="Have a great day."
+            android:textAlignment="center"
+            android:textSize="24sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/activity_merchant_return_home_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/jogologo"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:text="Return back home"/>
+    <ImageView
+        android:id="@+id/activity_merchant_return_home_imageview"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/activity_merchant_return_home_textview"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/ic_home_black_24dp"/>
+    <ImageView
+        android:id="@+id/activity_merchant_arrow_imageview"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_above="@id/activity_merchant_return_home_imageview"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/arrow"
+        android:rotation="-90"/>
 </RelativeLayout>

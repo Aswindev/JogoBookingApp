@@ -194,6 +194,8 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
                     cachedPosition=0;
                     ca.notifyDataSetChanged();
 
+                    CheckForAvailability(currentSelectedSlot);
+
                     RefreshViews();
                 }
             }
@@ -467,9 +469,6 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
 //        set first date as selected
         currentSelectedSlot=result.get(cachedPosition);
 
-//        Check availability in first date
-//        http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com/Jogo/GetBookingByDate?date=20171018&groundId=1
-
         CheckForAvailability(currentSelectedSlot);
 
 //        Listener for date selection recyclerview
@@ -496,7 +495,7 @@ public class BookingFragment extends Fragment implements FragmentRefreshListener
         String formattedDate=BookingDateFormat.format(currentSelectedSlot.fullDate);
 //        Log.d(TAG, "InitHorizontalDateSelectorList: "+BookingDateFormat.format(currentSelectedSlot.fullDate));
 //        Log.d(TAG, "InitHorizontalDateSelectorList: "+currentSelectedLocationCode);
-        String url="http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com/Jogo/GetBookingByDate?date="+formattedDate+"&groundId="+currentSelectedLocationCode;
+        String url=ArenaLocationClass.domain+"/Jogo/GetBookingByDate?date="+formattedDate+"&groundId="+currentSelectedLocationCode;
 //        volleyStringRequest(url);
         volleyJsonObjectRequest(url,formattedDate,currentSelectedLocationCode);
 //        volleyJsonArrayRequest(url);

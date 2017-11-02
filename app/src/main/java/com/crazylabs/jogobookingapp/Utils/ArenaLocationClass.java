@@ -13,4 +13,5 @@ public class ArenaLocationClass {
     public static Boolean aBoolean5s[] = {false,true,true,false,false};
     public static Boolean aBoolean6s[] = {true,false,false,true,true};
     public static Boolean aBoolean7s[] = {true,true,true,false,false};
+    public static String domain="http://jogoapi-env.mbwc7vryaa.ap-south-1.elasticbeanstalk.com";
 }
